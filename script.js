@@ -1,5 +1,5 @@
 
-let fishes = new Array(3)
+let fishes = new Array(10)
 let food = new Array(0)
 let gravityAcceleration = 0.1
 let newX, newY
@@ -16,11 +16,11 @@ class Fish {
       x = x + this.xspeed
       y = y + this.yspeed
 
-      if (x > width - d / 2 || x < d / 2) {
+      if (x > width - (d / 2) || x < (d / 2)) {
         this.xspeed = this.xspeed * -1
       }
 
-      if (y > height - d / 2 || y < d / 2) {
+      if (y > height - (d / 2) || y < (d / 2)) {
         this.yspeed = this.yspeed * -1
       }
     }
@@ -47,7 +47,7 @@ function setup() {
     const randomD = random(10, 100)
     const randomX = random(-5, 5)
     const randomY = random(-5, 5)
-    fishes[i] = new Fish(random(0, width - 200), random(0, height - 200), randomD, randomX, randomY)
+    fishes[i] = new Fish(random(0, width - (randomD / 2)), random(0, height - (randomD / 2)), randomD, randomX, randomY)
   }
 }
 
@@ -83,15 +83,19 @@ function windowResized() {
 function mouseClicked() {
   const randomY = random(-3, -1)
   const randomD = random(10, 25)
-  const id = Math.floor(Math.random() * 10000)
-  const newFood = new Food(id, mouseX, mouseY, randomD, randomY)
+  const newFood = new Food(mouseX, mouseY, randomD, randomY)
   food.push(newFood)
 }
 
-// for changing fish direction every 5sec
+// for changing fish direction every 8sec
+// dont run this if fish detect a food on their radar
 (function(){
   setInterval(() => {
-    fishes.forEach(el => {
+    // get a randomize length and select the fishes base on the range
+    const left = Math.floor(random(0, fishes.length / 2))
+    const right = Math.floor(random((fishes.length / 2) + 1, fishes.length + 1))
+    const selectedFishes = fishes.slice(left, right)
+    selectedFishes.forEach(el => {
       const newXSpeed = random(-5, 5)
       const newYSpeed = random(-5, 5)
       const isStopping = random(1, 10)
@@ -102,7 +106,6 @@ function mouseClicked() {
         el.xspeed = newXSpeed * (Math.random() < 0.5 ? 1 : -1)
         el.yspeed = newYSpeed * (Math.random() < 0.5 ? 1 : -1)
       }
-      console.log(el, newXSpeed, newYSpeed,  newYSpeed * Math.random() < 0.5 ? 1 : -1)
     })
   }, 8000)
 })()
