@@ -1,24 +1,27 @@
 
 let fishes = new Array(3)
 let food = new Array(0)
-let randomD, randomX, randomY
 let gravityAcceleration = 0.1
+let newX, newY
 
 class Fish {
   constructor(x, y, d, xspeed, yspeed) {
+    this.xspeed = xspeed
+    this.yspeed = yspeed
     this.drawFish = function () {
       circle(x, y, d)
     }
     // change this to fish like movement
     this.moveFish = function () {
-      x = x + xspeed
-      y = y + yspeed
+      x = x + this.xspeed
+      y = y + this.yspeed
+
       if (x > width - d / 2 || x < d / 2) {
-        xspeed = xspeed * -1
+        this.xspeed = this.xspeed * -1
       }
 
       if (y > height - d / 2 || y < d / 2) {
-        yspeed = yspeed * -1
+        this.yspeed = this.yspeed * -1
       }
     }
   }
@@ -26,11 +29,14 @@ class Fish {
 
 class Food {
   constructor(x, y, d, yspeed) {
-    this.drawFish = function () {
+    this.drawFood = function () {
       circle(x, y, d)
     }
     this.drop = function () {
       y -= yspeed + gravityAcceleration
+      // remove if it goes out of bounds
+      // if((y - d / 2) > height) {
+      // }
     }
   }
 }
@@ -38,10 +44,10 @@ class Food {
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight)
   for(let i = 0; i < fishes.length; i++) {
-    randomD = random(10, 100)
-    randomX = random(-5, 5)
-    randomY = random(-5, 5)
-    fishes[i] = new Fish(random(0, width - 100), random(0, height - 100), randomD, randomX, randomY)
+    const randomD = random(10, 100)
+    const randomX = random(-5, 5)
+    const randomY = random(-5, 5)
+    fishes[i] = new Fish(random(0, width - 200), random(0, height - 200), randomD, randomX, randomY)
   }
 }
 
@@ -54,7 +60,7 @@ function draw() {
   }
   // draw food
   for (let i = 0; i < food.length; i++) {
-    food[i].drawFish()
+    food[i].drawFood()
     food[i].drop()
   }
 }
@@ -75,8 +81,28 @@ function windowResized() {
 
 
 function mouseClicked() {
-  console.log(mouseX, mouseY)
   const randomY = random(-3, -1)
-  const newFood = new Food(mouseX, mouseY, 10, randomY)
+  const randomD = random(10, 25)
+  const id = Math.floor(Math.random() * 10000)
+  const newFood = new Food(id, mouseX, mouseY, randomD, randomY)
   food.push(newFood)
 }
+
+// for changing fish direction every 5sec
+(function(){
+  setInterval(() => {
+    fishes.forEach(el => {
+      const newXSpeed = random(-5, 5)
+      const newYSpeed = random(-5, 5)
+      const isStopping = random(1, 10)
+      if(isStopping == 5) {
+        el.xspeed = 0
+        el.yspeed = 0
+      } else {
+        el.xspeed = newXSpeed * (Math.random() < 0.5 ? 1 : -1)
+        el.yspeed = newYSpeed * (Math.random() < 0.5 ? 1 : -1)
+      }
+      console.log(el, newXSpeed, newYSpeed,  newYSpeed * Math.random() < 0.5 ? 1 : -1)
+    })
+  }, 8000)
+})()
