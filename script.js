@@ -12,9 +12,9 @@ class Fish {
     this.yspeed = yspeed
     this.drawFish = function () {
       if(this.xspeed > 0) {
-        image(fishImage, x, y, d, d)
+        image(fishImage, x, y, 78, 46)
       } else {
-        image(fishImageFlip, x, y, d, d)
+        image(fishImageFlip, x, y, 78, 46)
       }
     }
     this.moveFish = function () {
@@ -59,9 +59,9 @@ function setup() {
   createCanvas(window.innerWidth, window.innerHeight)
   for(let i = 0; i < fishes.length; i++) {
     const randomD = random(50, 150)
-    const randomX = random(-5, 5)
-    const randomY = random(-5, 5)
-    fishes[i] = new Fish(random(0, width - (randomD / 2)), random(0, height - (randomD / 2)), randomD, randomX, randomY)
+    const randomX = random(-3, 3)
+    const randomY = random(-3, 3)
+    fishes[i] = new Fish(random(0 + randomD, width - (randomD / 2)), random(0 + randomD, height - (randomD / 2)), randomD, randomX, randomY)
   }
 }
 
@@ -111,12 +111,12 @@ function mouseClicked() {
     const right = Math.floor(random((fishes.length / 2) + 1, fishes.length + 1))
     const selectedFishes = fishes.slice(left, right)
     selectedFishes.forEach(el => {
-      const newXSpeed = random(-5, 5)
-      const newYSpeed = random(-5, 5)
+      const newXSpeed = random(-3, 3)
+      const newYSpeed = random(-3, 3)
       const isStopping = random(1, 10)
       if(isStopping == 5) {
-        el.xspeed = 0
-        el.yspeed = 0
+        el.xspeed = 0.1 * (Math.random() < 0.5 ? 1 : -1)
+        el.yspeed = 0.1 * (Math.random() < 0.5 ? 1 : -1)
       } else {
         el.xspeed = newXSpeed * (Math.random() < 0.5 ? 1 : -1)
         el.yspeed = newYSpeed * (Math.random() < 0.5 ? 1 : -1)
