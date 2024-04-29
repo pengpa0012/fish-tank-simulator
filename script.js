@@ -3,19 +3,23 @@ let fishes = new Array(10)
 let food = new Array(0)
 let gravityAcceleration = 0.1
 let newX, newY
+let fishImage, fishImageFlip
+let foodDetected = false
 
 class Fish {
   constructor(x, y, d, xspeed, yspeed) {
     this.xspeed = xspeed
     this.yspeed = yspeed
     this.drawFish = function () {
-      circle(x, y, d)
+      if(this.xspeed > 0) {
+        image(fishImage, x, y, d, d)
+      } else {
+        image(fishImageFlip, x, y, d, d)
+      }
     }
-    // change this to fish like movement
     this.moveFish = function () {
       x = x + this.xspeed
       y = y + this.yspeed
-
       if (x > width - (d / 2) || x < (d / 2)) {
         this.xspeed = this.xspeed * -1
       }
@@ -23,6 +27,9 @@ class Fish {
       if (y > height - (d / 2) || y < (d / 2)) {
         this.yspeed = this.yspeed * -1
       }
+    }
+    this.isFoodNearby = function () {
+      // add fish radar for food nearby
     }
   }
 }
@@ -33,18 +40,25 @@ class Food {
       circle(x, y, d)
     }
     this.drop = function () {
-      y -= yspeed + gravityAcceleration
-      // remove if it goes out of bounds
-      // if((y - d / 2) > height) {
-      // }
+      if(y > height - (d / 2)) {
+        y = y
+      } else {
+        y -= yspeed + gravityAcceleration
+      }
     }
   }
+}
+
+// Load the image.
+function preload() {
+  fishImage = loadImage('assets/fish.png')
+  fishImageFlip = loadImage('assets/fish-flip.png')
 }
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight)
   for(let i = 0; i < fishes.length; i++) {
-    const randomD = random(10, 100)
+    const randomD = random(50, 150)
     const randomX = random(-5, 5)
     const randomY = random(-5, 5)
     fishes[i] = new Fish(random(0, width - (randomD / 2)), random(0, height - (randomD / 2)), randomD, randomX, randomY)
@@ -90,6 +104,7 @@ function mouseClicked() {
 // for changing fish direction every 8sec
 // dont run this if fish detect a food on their radar
 (function(){
+  if (foodDetected) return
   setInterval(() => {
     // get a randomize length and select the fishes base on the range
     const left = Math.floor(random(0, fishes.length / 2))
@@ -107,5 +122,5 @@ function mouseClicked() {
         el.yspeed = newYSpeed * (Math.random() < 0.5 ? 1 : -1)
       }
     })
-  }, 8000)
+  }, 1000)
 })()
