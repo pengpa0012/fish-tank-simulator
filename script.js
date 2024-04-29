@@ -1,9 +1,9 @@
 
-let fishes = new Array(10)
-let food = new Array(0)
+let fishes = new Array(1)
+let food = new Array(1)
 let gravityAcceleration = 0.1
 let newX, newY
-let fishImage, fishImageFlip
+let fishImage, fishImageFlip, fishFood
 let foodDetected = false
 
 class Fish {
@@ -20,6 +20,13 @@ class Fish {
     this.moveFish = function () {
       x = x + this.xspeed
       y = y + this.yspeed
+
+
+
+      // console.log("DISTANCE", checkNearbyFood(x, y, food[0].x, food[0].y))
+      // console.log("FISH", x, y)
+      // console.log("FOOD", food[0].x, food[0].y)
+
       if (x > width - (d / 2) || x < (d / 2)) {
         this.xspeed = this.xspeed * -1
       }
@@ -28,22 +35,21 @@ class Fish {
         this.yspeed = this.yspeed * -1
       }
     }
-    this.isFoodNearby = function () {
-      // add fish radar for food nearby
-    }
   }
 }
 
 class Food {
   constructor(x, y, d, yspeed) {
+    this.x = x
+    this.y = y
     this.drawFood = function () {
-      circle(x, y, d)
+      image(fishFood, this.x, this.y, d, d)
     }
     this.drop = function () {
-      if(y > height - (d / 2)) {
-        y = y
+      if(this.y > height - d) {
+        this.y = this.y
       } else {
-        y -= yspeed + gravityAcceleration
+        this.y -= yspeed + gravityAcceleration
       }
     }
   }
@@ -53,6 +59,7 @@ class Food {
 function preload() {
   fishImage = loadImage('assets/fish.png')
   fishImageFlip = loadImage('assets/fish-flip.png')
+  fishFood = loadImage('assets/food.png')
 }
 
 function setup() {
@@ -63,6 +70,7 @@ function setup() {
     const randomY = random(-3, 3)
     fishes[i] = new Fish(random(0 + randomD, width - (randomD / 2)), random(0 + randomD, height - (randomD / 2)), randomD, randomX, randomY)
   }
+  food[0] = new Food(width / 2, 100, 25, -1)
 }
 
 function draw() {
@@ -82,6 +90,13 @@ function draw() {
 function windowResized() {
   resizeCanvas(window.innerWidth, window.innerHeight)
 }
+
+function checkNearbyFood(x1, y1, x2, y2) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
 
 // add new fish
 // function mouseClicked() {
@@ -122,5 +137,5 @@ function mouseClicked() {
         el.yspeed = newYSpeed * (Math.random() < 0.5 ? 1 : -1)
       }
     })
-  }, 1000)
+  }, 8000)
 })()
