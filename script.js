@@ -28,10 +28,10 @@ class Fish {
       for(let i in food) {
         const nearbyFood = checkNearbyFood(x, y, food[i].x, food[i].y, i)
         if(nearbyFood) {
-          if((x - food[i].x < 50 && x - food[i].x > -50) && (y - food[i].y < 50 && y - food[i].y > -50)) {
+          if((x - food[i].x < 10 && (x + fishes[randomize][2] )- food[i].x > -10) && (y - food[i].y < 10 && (y + fishes[randomize][3]) - food[i].y > -10)) {
             food.splice(i, 1)
-            this.xspeed = xspeed
-            this.yspeed = yspeed
+            this.xspeed = Math.random() < 0.5 ? 1 : -1
+            this.yspeed = Math.random() < 0.5 ? 1 : -1
             return
           }
 
@@ -131,7 +131,7 @@ function checkNearbyFood(x1, y1, x2, y2, index) {
   // iterate on all food and return the nearest food distance relative to fish coords
   const dx = x2 - x1;
   const dy = y2 - y1;
-  return Math.sqrt(dx * dx + dy * dy) <= 300 ? {index} : false
+  return Math.sqrt(dx * dx + dy * dy) <= 200 ? {index} : false
 }
 
 
