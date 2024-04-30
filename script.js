@@ -1,9 +1,9 @@
 
-let fishes = new Array(1)
+let fishes = new Array(5)
 let food = new Array(0)
 let gravityAcceleration = 0.1
 let newX, newY
-let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImageFlip3, fishImage4, fishImageFlip4, fishFood
+let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImageFlip3, fishImage4, fishImageFlip4, fishFood, sand, far
 let foodDetected = false
 
 class Fish {
@@ -16,6 +16,7 @@ class Fish {
     const randomize = Math.floor(Math.random() * 3) + 1
 
     this.drawFish = function () {
+      // update this
       if(this.xspeed > 0) {
         image(fishes[randomize][0], x, y, fishes[randomize][2], fishes[randomize][3])
       } else {
@@ -29,9 +30,10 @@ class Fish {
         const nearbyFood = checkNearbyFood(x, y, food[i].x, food[i].y, i)
         if(nearbyFood) {
           if((x - food[i].x < 10 && (x + fishes[randomize][2] )- food[i].x > -10) && (y - food[i].y < 10 && (y + fishes[randomize][3]) - food[i].y > -10)) {
+            // add sfx
             food.splice(i, 1)
             this.xspeed = Math.random() < 0.5 ? 1 : -1
-            this.yspeed = Math.random() < 0.5 ? 1 : -1
+            this.yspeed = 1
             return
           }
 
@@ -95,8 +97,9 @@ function preload() {
 
   fishImage4 = loadImage('assets/fish-4.png')
   fishImageFlip4 = loadImage('assets/fish-4-flip.png')
-
+  
   fishFood = loadImage('assets/food.png')
+  sand = loadImage('assets/sand.png')
 }
 
 function setup() {
@@ -106,11 +109,14 @@ function setup() {
     const randomY = random(-3, 3)
     fishes[i] = new Fish(random(0 + 200, width - (200 / 2)), random(0 + 200, height - (200 / 2)), randomX, randomY)
   }
-  // food[0] = new Food(width / 2, 100, 25, -1)
 }
 
 function draw() {
   clear()
+  background("#5b7bb7")
+  for(let i = 1; i < width / 100; i++) {
+    image(sand, width - 256 * i, height - 192, 256, 192)
+  }
   // draw fish
   for (let i = 0; i < fishes.length; i++) {
     fishes[i].drawFish()
@@ -153,7 +159,6 @@ function mouseClicked() {
 }
 
 // for changing fish direction every 8sec
-// dont run this if fish detect a food on their radar
 (function(){
   if (foodDetected) return
   setInterval(() => {
