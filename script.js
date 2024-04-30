@@ -3,7 +3,7 @@ let fishes = new Array(5)
 let food = new Array(0)
 let gravityAcceleration = 0.1
 let newX, newY
-let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImageFlip3, fishImage4, fishImageFlip4, fishFood, sand, far
+let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImageFlip3, fishImage4, fishImageFlip4, fishFood, sand, far, foreground
 let foodDetected = false
 
 class Fish {
@@ -100,6 +100,7 @@ function preload() {
   
   fishFood = loadImage('assets/food.png')
   sand = loadImage('assets/sand.png')
+  foreground = loadImage('assets/foreground.png')
 }
 
 function setup() {
@@ -116,6 +117,10 @@ function draw() {
   background("#5b7bb7")
   for(let i = 1; i < width / 100; i++) {
     image(sand, width - 256 * i, height - 192, 256, 192)
+  }
+
+  for(let i = 1; i < width / 100; i++) {
+    image(foreground, width - 512 * i, height - 192, 512, 192)
   }
   // draw fish
   for (let i = 0; i < fishes.length; i++) {
