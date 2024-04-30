@@ -3,7 +3,7 @@ let fishes = new Array(5)
 let food = new Array(0)
 let gravityAcceleration = 0.1
 let newX, newY
-let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImageFlip3, fishImage4, fishImageFlip4, fishFood, sand, far, foreground
+let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImageFlip3, fishImage4, fishImageFlip4, fishFood, sand, far, foreground, munch
 let foodDetected = false
 
 class Fish {
@@ -29,13 +29,26 @@ class Fish {
       for(let i in food) {
         const nearbyFood = checkNearbyFood(x, y, food[i].x, food[i].y, i)
         if(nearbyFood) {
-          if((x - food[i].x < 10 && (x + fishes[randomize][2] )- food[i].x > -10) && (y - food[i].y < 10 && (y + fishes[randomize][3]) - food[i].y > -10)) {
-            // add sfx
+          if((x - food[i].x < 5 && (x + fishes[randomize][2]) - food[i].x > -5) && (y - food[i].y < 5 && (y + fishes[randomize][3]) - food[i].y > -15)) {
+            munch.play()
             food.splice(i, 1)
             this.xspeed = Math.random() < 0.5 ? 1 : -1
-            this.yspeed = 1
+            this.yspeed = -1
             return
           }
+
+          // start
+          // to prevent fish of goint out of canvas when chasing food
+          if (x > width - fishes[randomize][2] || x <= 0) {
+            this.xspeed = this.xspeed * -1
+            return
+          }
+    
+          if (y > height - fishes[randomize][3] || y <= 0) {
+            this.yspeed = this.yspeed * -1
+            return
+          }
+          // end
 
           if(food[nearbyFood.index].x < x) {
             this.xspeed = -3
@@ -86,21 +99,23 @@ class Food {
 
 // Load the image.
 function preload() {
-  fishImage1 = loadImage('assets/fish-1.png')
-  fishImageFlip1 = loadImage('assets/fish-1-flip.png')
+  fishImage1 = loadImage('assets/images/fish-1.png')
+  fishImageFlip1 = loadImage('assets/images/fish-1-flip.png')
 
-  fishImage2 = loadImage('assets/fish-2.png')
-  fishImageFlip2 = loadImage('assets/fish-2-flip.png')
+  fishImage2 = loadImage('assets/images/fish-2.png')
+  fishImageFlip2 = loadImage('assets/images/fish-2-flip.png')
 
-  fishImage3 = loadImage('assets/fish-3.png')
-  fishImageFlip3 = loadImage('assets/fish-3-flip.png')
+  fishImage3 = loadImage('assets/images/fish-3.png')
+  fishImageFlip3 = loadImage('assets/images/fish-3-flip.png')
 
-  fishImage4 = loadImage('assets/fish-4.png')
-  fishImageFlip4 = loadImage('assets/fish-4-flip.png')
+  fishImage4 = loadImage('assets/images/fish-4.png')
+  fishImageFlip4 = loadImage('assets/images/fish-4-flip.png')
   
-  fishFood = loadImage('assets/food.png')
-  sand = loadImage('assets/sand.png')
-  foreground = loadImage('assets/foreground.png')
+  fishFood = loadImage('assets/images/food.png')
+  sand = loadImage('assets/images/sand.png')
+  foreground = loadImage('assets/images/foreground.png')
+
+  munch = loadSound('assets/sfx/munch.mp3')
 }
 
 function setup() {
@@ -114,11 +129,13 @@ function setup() {
 
 function draw() {
   clear()
+  // background
   background("#5b7bb7")
+  // midground
   for(let i = 1; i < width / 100; i++) {
     image(sand, width - 256 * i, height - 192, 256, 192)
   }
-
+  // foreground
   for(let i = 1; i < width / 100; i++) {
     image(foreground, width - 512 * i, height - 192, 512, 192)
   }
