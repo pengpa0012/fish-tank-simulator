@@ -1,5 +1,5 @@
 
-let fishes = new Array(25)
+let fishes = new Array(1)
 let food = new Array(0)
 let gravityAcceleration = 0.1
 let newX, newY
@@ -25,12 +25,35 @@ class Fish {
     this.moveFish = function () {
       x = x + this.xspeed
       y = y + this.yspeed
+      for(let i in food) {
+        const nearbyFood = checkNearbyFood(x, y, food[i].x, food[i].y, i)
+        if(nearbyFood) {
+          if((x - food[i].x < 50 && x - food[i].x > -50) && (y - food[i].y < 50 && y - food[i].y > -50)) {
+            food.splice(i, 1)
+            this.xspeed = xspeed
+            this.yspeed = yspeed
+            return
+          }
 
+          if(food[nearbyFood.index].x < x) {
+            this.xspeed = -3
+          } 
 
+          if(food[nearbyFood.index].x > x) {
+            this.xspeed = 3
+          } 
 
-      // console.log("DISTANCE", checkNearbyFood(x, y, food[0].x, food[0].y))
-      // console.log("FISH", x, y)
-      // console.log("FOOD", food[0].x, food[0].y)
+          if(food[nearbyFood.index].y < y) {
+            this.yspeed = -3
+          } 
+
+          if(food[nearbyFood.index].y > y) {
+            this.yspeed = 3
+          } 
+          
+        } 
+      }
+
       if (x > width - fishes[randomize][2] || x <= 0) {
         this.xspeed = this.xspeed * -1
       }
@@ -104,10 +127,11 @@ function windowResized() {
   resizeCanvas(window.innerWidth, window.innerHeight)
 }
 
-function checkNearbyFood(x1, y1, x2, y2) {
+function checkNearbyFood(x1, y1, x2, y2, index) {
+  // iterate on all food and return the nearest food distance relative to fish coords
   const dx = x2 - x1;
   const dy = y2 - y1;
-  return Math.sqrt(dx * dx + dy * dy);
+  return Math.sqrt(dx * dx + dy * dy) <= 300 ? {index} : false
 }
 
 
@@ -123,7 +147,7 @@ function checkNearbyFood(x1, y1, x2, y2) {
 
 function mouseClicked() {
   const randomY = random(-3, -1)
-  const randomD = random(10, 25)
+  const randomD = random(10, 20)
   const newFood = new Food(mouseX, mouseY, randomD, randomY)
   food.push(newFood)
 }
