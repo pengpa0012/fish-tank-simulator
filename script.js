@@ -1,20 +1,25 @@
 
-let fishes = new Array(1)
-let food = new Array(1)
+let fishes = new Array(25)
+let food = new Array(0)
 let gravityAcceleration = 0.1
 let newX, newY
-let fishImage, fishImageFlip, fishFood
+let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImageFlip3, fishImage4, fishImageFlip4, fishFood
 let foodDetected = false
 
 class Fish {
-  constructor(x, y, d, xspeed, yspeed) {
+  constructor(x, y, xspeed, yspeed) {
     this.xspeed = xspeed
     this.yspeed = yspeed
+
+    // get loaded fish assets and their dimension and choose randomly
+    const fishes = [[fishImage1, fishImageFlip1, 78, 46],[fishImage2, fishImageFlip2, 78, 50], [fishImage3, fishImageFlip3, 82, 78], [fishImage4, fishImageFlip4, 122, 48]]
+    const randomize = Math.floor(Math.random() * 3) + 1
+
     this.drawFish = function () {
       if(this.xspeed > 0) {
-        image(fishImage, x, y, 78, 46)
+        image(fishes[randomize][0], x, y, fishes[randomize][2], fishes[randomize][3])
       } else {
-        image(fishImageFlip, x, y, 78, 46)
+        image(fishes[randomize][1], x, y, fishes[randomize][2], fishes[randomize][3])
       }
     }
     this.moveFish = function () {
@@ -26,12 +31,11 @@ class Fish {
       // console.log("DISTANCE", checkNearbyFood(x, y, food[0].x, food[0].y))
       // console.log("FISH", x, y)
       // console.log("FOOD", food[0].x, food[0].y)
-
-      if (x > width - (d / 2) || x < (d / 2)) {
+      if (x > width - fishes[randomize][2] || x <= 0) {
         this.xspeed = this.xspeed * -1
       }
 
-      if (y > height - (d / 2) || y < (d / 2)) {
+      if (y > height - fishes[randomize][3] || y <= 0) {
         this.yspeed = this.yspeed * -1
       }
     }
@@ -57,20 +61,29 @@ class Food {
 
 // Load the image.
 function preload() {
-  fishImage = loadImage('assets/fish.png')
-  fishImageFlip = loadImage('assets/fish-flip.png')
+  fishImage1 = loadImage('assets/fish-1.png')
+  fishImageFlip1 = loadImage('assets/fish-1-flip.png')
+
+  fishImage2 = loadImage('assets/fish-2.png')
+  fishImageFlip2 = loadImage('assets/fish-2-flip.png')
+
+  fishImage3 = loadImage('assets/fish-3.png')
+  fishImageFlip3 = loadImage('assets/fish-3-flip.png')
+
+  fishImage4 = loadImage('assets/fish-4.png')
+  fishImageFlip4 = loadImage('assets/fish-4-flip.png')
+
   fishFood = loadImage('assets/food.png')
 }
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight)
   for(let i = 0; i < fishes.length; i++) {
-    const randomD = random(50, 150)
     const randomX = random(-3, 3)
     const randomY = random(-3, 3)
-    fishes[i] = new Fish(random(0 + randomD, width - (randomD / 2)), random(0 + randomD, height - (randomD / 2)), randomD, randomX, randomY)
+    fishes[i] = new Fish(random(0 + 200, width - (200 / 2)), random(0 + 200, height - (200 / 2)), randomX, randomY)
   }
-  food[0] = new Food(width / 2, 100, 25, -1)
+  // food[0] = new Food(width / 2, 100, 25, -1)
 }
 
 function draw() {
@@ -101,7 +114,6 @@ function checkNearbyFood(x1, y1, x2, y2) {
 // add new fish
 // function mouseClicked() {
 //   console.log(mouseX, mouseY)
-//   const randomD = random(10, 100)
 //   const randomX = random(-5, 5)
 //   const randomY = random(-5, 5)
 //   const newFish = new Fish(mouseX, mouseY, randomD, randomX, randomY)
