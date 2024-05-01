@@ -39,6 +39,7 @@ canvas {
 
 .fish-ui li {
   cursor: pointer;
+  border: solid 2px transparent; 
 }
 
 .fish-ui li.selected {
