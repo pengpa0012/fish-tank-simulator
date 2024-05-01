@@ -15,9 +15,50 @@ canvas {
 
 .fish-ui {
   position: absolute;
-  top: 0;
+  top: 10%;
   left: 0;
-  width: 100px;
-  height: 200px;
-  background: red;
+  min-width: 100px;
+  min-height: 200px;
+  padding: 1rem;
+  background: #0d0d0d;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: space-around;
+  align-items: center;
+  list-style: none;
+  border-radius: 0 0 5px 0;
+  color: white;
+  transform: translateX(-100%);
+  transition: 500ms;
+}
+
+.fish-ui.active {
+  transform: translateX(0);
+}
+
+.fish-ui li {
+  cursor: pointer;
+}
+
+.fish-ui li.selected {
+  border: solid 2px white; 
+  border-radius: 5px;
+}
+
+.fish-ui li img {
+  padding: 10px;
+}
+
+.fish-ui .toggler {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 25px;
+  height: 25px;
+  background: green;
+  border: none;
+  translate: 100% 0;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
 }
