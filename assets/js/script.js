@@ -1,5 +1,5 @@
 
-let fishes = new Array(5)
+let fishes = new Array(1)
 let food = new Array(0)
 let gravityAcceleration = 0.1
 let newX, newY
@@ -7,13 +7,13 @@ let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImage
 let foodDetected = false
 
 class Fish {
-  constructor(x, y, xspeed, yspeed) {
+  constructor(x, y, xspeed, yspeed, type) {
     this.xspeed = xspeed
     this.yspeed = yspeed
 
     // get loaded fish assets and their dimension and choose randomly
     const fishes = [[fishImage1, fishImageFlip1, 78, 46],[fishImage2, fishImageFlip2, 78, 50], [fishImage3, fishImageFlip3, 82, 78], [fishImage4, fishImageFlip4, 122, 48]]
-    const randomize = Math.floor(Math.random() * 3) + 1
+    const randomize = type ? type :Math.floor(Math.random() * 3) + 1
 
     this.drawFish = function () {
       // update this
@@ -174,10 +174,21 @@ function checkNearbyFood(x1, y1, x2, y2, index) {
 
 
 function mouseClicked() {
-  const randomY = random(-3, -1)
-  const randomD = random(10, 20)
-  const newFood = new Food(mouseX, mouseY, randomD, randomY)
-  food.push(newFood)
+  const selected = document.querySelector(".selected")
+  if(selected) {
+    const fishIndex = selected.attributes["data-index"].value
+    const randomX = random(-3, 3)
+    const randomY = random(-3, 3)
+    const minWidth = Math.min(Math.max(mouseX, 200), width - 200)
+    const minHeight = Math.min(Math.max(mouseY, 200), height - 200)
+    fishes.push(new Fish(minWidth, minHeight, randomX, randomY, fishIndex))
+  } else {
+    const randomY = random(-3, -1)
+    const randomD = random(10, 20)
+    const newFood = new Food(mouseX, mouseY, randomD, randomY)
+    food.push(newFood)
+  }
+  
 }
 
 // for changing fish direction every 8sec
@@ -213,6 +224,7 @@ fishUI.addEventListener("click", e => e.stopPropagation())
 toggler.addEventListener("click", e => {
   e.stopPropagation()
   fishUI.classList.toggle("active")
+  fishSelects.forEach(el => el.classList.remove("selected"))
 })
 
 fishSelects.forEach(el => {
