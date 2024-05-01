@@ -216,6 +216,7 @@ function mouseClicked() {
 
 // UI
 const toggler = document.querySelector(".toggler")
+const togglerImg = document.querySelector(".toggler img")
 const fishUI = document.querySelector(".fish-ui")
 const fishSelects = document.querySelectorAll(".fish-ui li")
 
@@ -224,6 +225,7 @@ fishUI.addEventListener("click", e => e.stopPropagation())
 toggler.addEventListener("click", e => {
   e.stopPropagation()
   fishUI.classList.toggle("active")
+  togglerImg.classList.toggle("active")
   fishSelects.forEach(el => el.classList.remove("selected"))
 })
 

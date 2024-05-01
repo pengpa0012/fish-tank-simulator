@@ -30,7 +30,7 @@ canvas {
   border-radius: 0 0 5px 0;
   color: white;
   transform: translateX(-100%);
-  transition: 500ms;
+  transition: 250ms ease-in;
 }
 
 .fish-ui.active {
@@ -57,9 +57,22 @@ canvas {
   right: 0;
   width: 25px;
   height: 25px;
-  background: green;
+  background: #0d0d0d;
   border: none;
   translate: 100% 0;
   border-radius: 0 5px 5px 0;
   cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.fish-ui .toggler img {
+  width: 15px;
+  height: 15px;
+  filter: invert(1);
+  transition: 250ms ease-in;
+}
+
+.fish-ui .toggler img.active {
+  transform: rotate(180deg);
 }
