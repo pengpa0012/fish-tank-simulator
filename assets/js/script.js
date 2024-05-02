@@ -3,7 +3,7 @@ let fishes = new Array(1)
 let food = new Array(0)
 let gravityAcceleration = 0.1
 let newX, newY
-let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImageFlip3, fishImage4, fishImageFlip4, fishFood, sand, far, foreground, munch
+let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImageFlip3, fishImage4, fishImageFlip4, fishFood, sand, far, foreground, munch, spawn
 let foodDetected = false
 
 class Fish {
@@ -116,6 +116,7 @@ function preload() {
   foreground = loadImage('assets/images/foreground.png')
 
   munch = loadSound('assets/sfx/munch.mp3')
+  spawn = loadSound('assets/sfx/spawn.mp3')
 }
 
 function setup() {
@@ -182,6 +183,7 @@ function mouseClicked() {
     const minWidth = Math.min(Math.max(mouseX, 200), width - 200)
     const minHeight = Math.min(Math.max(mouseY, 200), height - 200)
     fishes.push(new Fish(minWidth, minHeight, randomX, randomY, fishIndex))
+    spawn.play()
   } else {
     const randomY = random(-3, -1)
     const randomD = random(10, 20)
