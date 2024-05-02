@@ -26,6 +26,18 @@ class Fish {
     this.moveFish = function () {
       x = x + this.xspeed
       y = y + this.yspeed
+      
+
+      if (x > width - fishes[randomize][2] || x <= 0) {
+        this.xspeed = this.xspeed * -1
+      }
+
+      if (y > height - fishes[randomize][3] || y <= 0) {
+        this.yspeed = this.yspeed * -1
+      }
+    }
+
+    this.chaseFood = function () {
       for(let i in food) {
         const nearbyFood = checkNearbyFood(x, y, food[i].x, food[i].y, i)
         if(nearbyFood) {
@@ -65,16 +77,7 @@ class Fish {
           if(food[nearbyFood.index].y > y) {
             this.yspeed = 3
           } 
-          
         } 
-      }
-
-      if (x > width - fishes[randomize][2] || x <= 0) {
-        this.xspeed = this.xspeed * -1
-      }
-
-      if (y > height - fishes[randomize][3] || y <= 0) {
-        this.yspeed = this.yspeed * -1
       }
     }
   }
@@ -144,6 +147,7 @@ function draw() {
   for (let i = 0; i < fishes.length; i++) {
     fishes[i].drawFish()
     fishes[i].moveFish()
+    fishes[i].chaseFood()
   }
   // draw food
   for (let i = 0; i < food.length; i++) {
@@ -157,7 +161,7 @@ function windowResized() {
 }
 
 function checkNearbyFood(x1, y1, x2, y2, index) {
-  // iterate on all food and return the nearest food distance relative to fish coords
+  // return the nearest food distance relative to fish coords
   const dx = x2 - x1;
   const dy = y2 - y1;
   return Math.sqrt(dx * dx + dy * dy) <= 200 ? {index} : false

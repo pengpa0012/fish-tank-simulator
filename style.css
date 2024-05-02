@@ -18,8 +18,9 @@ canvas {
   top: 10%;
   left: 0;
   min-width: 100px;
+  width: 10vw;
   min-height: 200px;
-  padding: 1rem;
+  padding: 1rem 2rem;
   background: #0d0d0d;
   display: flex;
   flex-direction: column;
@@ -49,14 +50,18 @@ canvas {
 
 .fish-ui li img {
   padding: 10px;
+  min-width: 100px;
+  width: 5vw;
 }
 
 .fish-ui .toggler {
   position: absolute;
   top: 0;
   right: 0;
-  width: 25px;
-  height: 25px;
+  min-width: 25px;
+  min-height: 25px;
+  width: 2vw;
+  height: 2vw;
   background: #0d0d0d;
   border: none;
   translate: 100% 0;
@@ -67,8 +72,8 @@ canvas {
 }
 
 .fish-ui .toggler img {
-  width: 15px;
-  height: 15px;
+  width: 1vw;
+  height: 1vw;
   filter: invert(1);
   transition: 250ms ease-in;
 }
