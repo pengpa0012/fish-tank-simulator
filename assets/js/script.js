@@ -16,31 +16,39 @@ class Fish {
     this.drawFish = function () {
       // update this
       if(this.xspeed > 0) {
-        image(fishesArr[0], x, y, fishesArr[2], fishesArr[3])
+        image(fishesArr[0], this.x, this.y, fishesArr[2], fishesArr[3])
       } else {
-        image(fishesArr[1], x, y, fishesArr[2], fishesArr[3])
+        image(fishesArr[1], this.x, this.y, fishesArr[2], fishesArr[3])
       }
     }
     this.moveFish = function (index) {
-      console.log(predator)
-      x = x + this.xspeed
-      y = y + this.yspeed
+      this.x = this.x + this.xspeed
+      this.y = this.y + this.yspeed
 
       // for removing shark on array if it goes out of screen
-      if((x - 600) > width || x < -600) {
+      if((this.x - 600) > width || this.x < -600) {
         predator.splice(index, 1)
       }
     }
 
-    this.eatEveryThing = function () {
+    this.eatEveryThing = function (fishes) {
       // remove everything it collides to
+      const sharkX = this.xspeed > 0 ? (this.x + 498) : this.x
+      for(let i in fishes) {
+        const xDistance = sharkX - fishes[i].x
+        const yDistance = (this.y + 104) - fishes[i].y
+        if((xDistance >= -20 && xDistance <= 200) && (yDistance >= -50 && yDistance <= 50)) {
+          fishes.splice(i, 1)
+          munch.play()
+        }
+      }
     }
 
     this.chaseFood = function () {
       for(let i in food) {
-        const nearbyFood = checkNearbyFood(x, y, food[i].x, food[i].y, i, 200)
+        const nearbyFood = checkNearbyFood(this.x, this.y, food[i].x, food[i].y, i, 200)
         if(nearbyFood) {
-          if((x - food[i].x < 5 && (x + fishesArr[2]) - food[i].x > -5) && (y - food[i].y < 5 && (y + fishesArr[3]) - food[i].y > -15)) {
+          if((this.x - food[i].x < 5 && (this.x + fishesArr[2]) - food[i].x > -5) && (this.y - food[i].y < 5 && (this.y + fishesArr[3]) - food[i].y > -15)) {
             munch.play()
             food.splice(i, 1)
             this.xspeed = Math.random() < 0.5 ? 1 : -1
@@ -50,40 +58,40 @@ class Fish {
 
           // start
           // to prevent fish of goint out of canvas when chasing food
-          if (x > width - fishesArr[2] || x <= 0) {
+          if (this.x > width - fishesArr[2] || this.x <= 0) {
             this.xspeed = this.xspeed * -1
             return
           }
     
-          if (y > height - fishesArr[3] || y <= 0) {
+          if (this.y > height - fishesArr[3] || this.y <= 0) {
             this.yspeed = this.yspeed * -1
             return
           }
           // end
 
-          if(food[nearbyFood.index].x < x) {
+          if(food[nearbyFood.index].x < this.x) {
             this.xspeed = -3
           } 
 
-          if(food[nearbyFood.index].x > x) {
+          if(food[nearbyFood.index].x > this.x) {
             this.xspeed = 3
           } 
 
-          if(food[nearbyFood.index].y < y) {
+          if(food[nearbyFood.index].y < this.y) {
             this.yspeed = -3
           } 
 
-          if(food[nearbyFood.index].y > y) {
+          if(food[nearbyFood.index].y > this.y) {
             this.yspeed = 3
           } 
         } 
       }
 
-      if (x > width - fishesArr[2] || x <= 0) {
+      if (this.x > width - fishesArr[2] || this.x <= 0) {
         this.xspeed = this.xspeed * -1
       }
 
-      if (y > height - fishesArr[3] || y <= 0) {
+      if (this.y > height - fishesArr[3] || this.y <= 0) {
         this.yspeed = this.yspeed * -1
       }
     }
@@ -173,6 +181,7 @@ function draw() {
   // draw predator
   for (let i = 0; i < predator.length; i++) {
     predator[i].drawFish()
+    predator[i].eatEveryThing(fishes)
     predator[i].moveFish(i)
   }
 }
