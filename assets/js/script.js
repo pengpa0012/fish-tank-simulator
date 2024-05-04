@@ -1,47 +1,38 @@
 
 let fishes = new Array(1)
+let predator = new Array(0)
 let food = new Array(0)
 let gravityAcceleration = 0.1
 let newX, newY
-let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImageFlip3, fishImage4, fishImageFlip4, fishFood, sand, far, foreground, munch, spawn
+let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImageFlip3, fishImage4, fishImageFlip4, fishImage5, fishImageFlip5, fishFood, sand, far, foreground, munch, spawn
 let foodDetected = false
-
+let fishesImg
 class Fish {
-  constructor(x, y, xspeed, yspeed, type) {
+  constructor(x, y, xspeed, yspeed, fishes) {
     this.xspeed = xspeed
     this.yspeed = yspeed
-
-    // get loaded fish assets and their dimension and choose randomly
-    const fishes = [[fishImage1, fishImageFlip1, 78, 46],[fishImage2, fishImageFlip2, 78, 50], [fishImage3, fishImageFlip3, 82, 78], [fishImage4, fishImageFlip4, 122, 48]]
-    const randomize = type ? type :Math.floor(Math.random() * 3) + 1
-
     this.drawFish = function () {
       // update this
       if(this.xspeed > 0) {
-        image(fishes[randomize][0], x, y, fishes[randomize][2], fishes[randomize][3])
+        image(fishes[0], x, y, fishes[2], fishes[3])
       } else {
-        image(fishes[randomize][1], x, y, fishes[randomize][2], fishes[randomize][3])
+        image(fishes[1], x, y, fishes[2], fishes[3])
       }
     }
     this.moveFish = function () {
       x = x + this.xspeed
       y = y + this.yspeed
-      
+    }
 
-      if (x > width - fishes[randomize][2] || x <= 0) {
-        this.xspeed = this.xspeed * -1
-      }
-
-      if (y > height - fishes[randomize][3] || y <= 0) {
-        this.yspeed = this.yspeed * -1
-      }
+    this.eatEveryThing = function () {
+      // remove everything it collides to
     }
 
     this.chaseFood = function () {
       for(let i in food) {
         const nearbyFood = checkNearbyFood(x, y, food[i].x, food[i].y, i)
         if(nearbyFood) {
-          if((x - food[i].x < 5 && (x + fishes[randomize][2]) - food[i].x > -5) && (y - food[i].y < 5 && (y + fishes[randomize][3]) - food[i].y > -15)) {
+          if((x - food[i].x < 5 && (x + fishes[2]) - food[i].x > -5) && (y - food[i].y < 5 && (y + fishes[3]) - food[i].y > -15)) {
             munch.play()
             food.splice(i, 1)
             this.xspeed = Math.random() < 0.5 ? 1 : -1
@@ -51,12 +42,12 @@ class Fish {
 
           // start
           // to prevent fish of goint out of canvas when chasing food
-          if (x > width - fishes[randomize][2] || x <= 0) {
+          if (x > width - fishes[2] || x <= 0) {
             this.xspeed = this.xspeed * -1
             return
           }
     
-          if (y > height - fishes[randomize][3] || y <= 0) {
+          if (y > height - fishes[3] || y <= 0) {
             this.yspeed = this.yspeed * -1
             return
           }
@@ -78,6 +69,14 @@ class Fish {
             this.yspeed = 3
           } 
         } 
+      }
+
+      if (x > width - fishes[2] || x <= 0) {
+        this.xspeed = this.xspeed * -1
+      }
+
+      if (y > height - fishes[3] || y <= 0) {
+        this.yspeed = this.yspeed * -1
       }
     }
   }
@@ -113,6 +112,9 @@ function preload() {
 
   fishImage4 = loadImage('assets/images/fish-4.png')
   fishImageFlip4 = loadImage('assets/images/fish-4-flip.png')
+
+  fishImage5 = loadImage('assets/images/shark.gif')
+  fishImageFlip5 = loadImage('assets/images/shark-flip.gif')
   
   fishFood = loadImage('assets/images/food.png')
   sand = loadImage('assets/images/sand.png')
@@ -124,10 +126,13 @@ function preload() {
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight)
+  // get loaded fish assets and their dimension and choose randomly
+  fishesImg = [[fishImage1, fishImageFlip1, 78, 46],[fishImage2, fishImageFlip2, 78, 50], [fishImage3, fishImageFlip3, 82, 78], [fishImage4, fishImageFlip4, 122, 48], [fishImage5, fishImageFlip5, 498, 208]]
   for(let i = 0; i < fishes.length; i++) {
     const randomX = random(-3, 3)
     const randomY = random(-3, 3)
-    fishes[i] = new Fish(random(0 + 200, width - (200 / 2)), random(0 + 200, height - (200 / 2)), randomX, randomY)
+    const randomize = Math.floor(Math.random() * 3) + 1
+    fishes[i] = new Fish(random(0 + 200, width - (200 / 2)), random(0 + 200, height - (200 / 2)), randomX, randomY, fishesImg[randomize])
   }
 }
 
@@ -143,16 +148,24 @@ function draw() {
   for(let i = 1; i < width / 100; i++) {
     image(foreground, width - 512 * i, height - 192, 512, 192)
   }
+  
+  // draw food
+  for (let i = 0; i < food.length; i++) {
+    food[i].drawFood()
+    food[i].drop()
+  }
+
   // draw fish
   for (let i = 0; i < fishes.length; i++) {
     fishes[i].drawFish()
     fishes[i].moveFish()
     fishes[i].chaseFood()
   }
-  // draw food
-  for (let i = 0; i < food.length; i++) {
-    food[i].drawFood()
-    food[i].drop()
+
+  // draw predator
+  for (let i = 0; i < predator.length; i++) {
+    predator[i].drawFish()
+    predator[i].moveFish()
   }
 }
 
@@ -186,25 +199,30 @@ function mouseClicked() {
     const randomY = random(-3, 3)
     const minWidth = Math.min(Math.max(mouseX, 200), width - 200)
     const minHeight = Math.min(Math.max(mouseY, 200), height - 200)
-    fishes.push(new Fish(minWidth, minHeight, randomX, randomY, fishIndex))
+    fishes.push(new Fish(minWidth, minHeight, randomX, randomY, fishesImg[fishIndex]))
     spawn.play()
   } else {
     const randomY = random(-3, -1)
     const randomD = random(10, 20)
-    const newFood = new Food(mouseX, mouseY, randomD, randomY)
+    const newFood = new Food(mouseX, mouseY, randomD, randomY, undefined)
     food.push(newFood)
   }
   
 }
 
-// for changing fish direction every 8sec
+// for changing fish direction every 8sec and spawn shark
 (function(){
+  // spawn shark at random x,y axis and move on 1 direction eating fish along the way
   if (foodDetected) return
   setInterval(() => {
     // get a randomize length and select the fishes base on the range
     const left = Math.floor(random(0, fishes.length / 2))
     const right = Math.floor(random((fishes.length / 2) + 1, fishes.length + 1))
     const selectedFishes = fishes.slice(left, right)
+
+    const randomX = Math.random() < 0.5 ? -498 : width
+    const randomY = random(0, height)
+    predator.push(new Fish(randomX, randomY, randomX == -498 ? 10 : -10, 0, fishesImg[4]))
     selectedFishes.forEach(el => {
       const newXSpeed = random(-3, 3)
       const newYSpeed = random(-3, 3)
