@@ -31,8 +31,7 @@ class Fish {
       }
     }
 
-    this.eatEveryThing = function (fishes) {
-      // remove everything it collides to
+    this.eatFish = function (fishes) {
       const sharkX = this.xspeed > 0 ? (this.x + 498) : this.x
       for(let i in fishes) {
         const xDistance = sharkX - fishes[i].x
@@ -181,7 +180,7 @@ function draw() {
   // draw predator
   for (let i = 0; i < predator.length; i++) {
     predator[i].drawFish()
-    predator[i].eatEveryThing(fishes)
+    predator[i].eatFish(fishes)
     predator[i].moveFish(i)
   }
 }
@@ -216,19 +215,22 @@ function mouseClicked() {
   
 }
 
-// for changing fish direction every 8sec and spawn shark
+
 (function(){
   // spawn shark at random x,y axis and move on 1 direction eating fish along the way
+  setInterval(() => {
+    const randomX = Math.random() < 0.5 ? -498 : width
+    const randomY = random(0, height)
+    predator.push(new Fish(randomX, randomY, randomX == -498 ? 10 : -10, 0, fishesImg[4]))
+  }, 10000)
+
+  // for changing fish direction every 8sec
   if (foodDetected) return
   setInterval(() => {
     // get a randomize length and select the fishes base on the range
     const left = Math.floor(random(0, fishes.length / 2))
     const right = Math.floor(random((fishes.length / 2) + 1, fishes.length + 1))
     const selectedFishes = fishes.slice(left, right)
-
-    const randomX = Math.random() < 0.5 ? -498 : width
-    const randomY = random(0, height)
-    predator.push(new Fish(randomX, randomY, randomX == -498 ? 10 : -10, 0, fishesImg[4]))
     selectedFishes.forEach(el => {
       const newXSpeed = random(-3, 3)
       const newYSpeed = random(-3, 3)
