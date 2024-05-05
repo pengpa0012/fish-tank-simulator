@@ -4,9 +4,10 @@ let predator = new Array(0)
 let food = new Array(0)
 let gravityAcceleration = 0.1
 let newX, newY
-let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImageFlip3, fishImage4, fishImageFlip4, fishImage5, fishImageFlip5, fishFood, sand, far, foreground, munch, spawn
+let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImageFlip3, fishImage4, fishImageFlip4, fishImage5, fishImageFlip5, fishFood, sand, far, foreground, munch, spawn, warning
 let foodDetected = false
 let fishesImg
+let warningSignPos
 class Fish {
   constructor(x, y, xspeed, yspeed, fishesArr) {
     this.xspeed = xspeed
@@ -134,6 +135,7 @@ function preload() {
   fishFood = loadImage('assets/images/food.png')
   sand = loadImage('assets/images/sand.png')
   foreground = loadImage('assets/images/foreground.png')
+  warning = loadImage('assets/images/warning.png')
 
   munch = loadSound('assets/sfx/munch.mp3')
   spawn = loadSound('assets/sfx/spawn.mp3')
@@ -163,7 +165,12 @@ function draw() {
   for(let i = 1; i < width / 100; i++) {
     image(foreground, width - 512 * i, height - 192, 512, 192)
   }
-  
+
+  // warning sign
+  if(warningSignPos) {
+    image(warning, warningSignPos.randomX > 0 ? width - 110 : 10, warningSignPos.randomY, 100, 83)
+  }
+ 
   // draw food
   for (let i = 0; i < food.length; i++) {
     food[i].drawFood()
@@ -221,7 +228,11 @@ function mouseClicked() {
   setInterval(() => {
     const randomX = Math.random() < 0.5 ? -498 : width
     const randomY = random(0, height)
-    predator.push(new Fish(randomX, randomY, randomX == -498 ? 10 : -10, 0, fishesImg[4]))
+    warningSignPos = {randomX, randomY}
+    setTimeout(() => {
+      warningSignPos = undefined
+      predator.push(new Fish(randomX, randomY, randomX == -498 ? 10 : -10, 0, fishesImg[4]))
+    }, 1000)
   }, 10000)
 
   // for changing fish direction every 8sec
@@ -268,3 +279,5 @@ fishSelects.forEach(el => {
     el.classList.add("selected")
   })
 })
+
+// add start menu
