@@ -299,9 +299,13 @@ btns.forEach(el => {
     switch (actionType) {
       case "play":
         startGame = true
+        btns[0].classList.add("disable")
+        btns[1].classList.remove("disable")
         break
       case "pause":
         startGame = false
+        btns[0].classList.remove("disable")
+        btns[1].classList.add("disable")
         break
       case "reset":
         food = []

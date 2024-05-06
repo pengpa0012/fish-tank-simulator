@@ -98,6 +98,11 @@ canvas {
   border: none;
 }
 
+.btns button.disable {
+  pointer-events: none;
+  filter: grayscale(1);
+}
+
 .btns button img {
   min-width: 50px;
   min-height: 50px;
