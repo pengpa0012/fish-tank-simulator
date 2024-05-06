@@ -81,3 +81,25 @@ canvas {
 .fish-ui .toggler img.active {
   transform: rotate(180deg);
 }
+
+.btns {
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+  gap: 10px;
+}
+
+.btns button {
+  background: transparent;
+  outline: none;
+  border: none;
+}
+
+.btns button img {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
