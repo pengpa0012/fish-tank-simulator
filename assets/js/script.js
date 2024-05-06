@@ -8,6 +8,7 @@ let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImage
 let foodDetected = false
 let fishesImg
 let warningSignPos
+let startGame = true, isReset
 class Fish {
   constructor(x, y, xspeed, yspeed, fishesArr) {
     this.xspeed = xspeed
@@ -166,6 +167,10 @@ function draw() {
     image(foreground, width - 512 * i, height - 192, 512, 192)
   }
 
+  // draw start menu here
+
+  // if(!startGame) return
+
   // warning sign
   if(warningSignPos) {
     image(warning, warningSignPos.randomX > 0 ? width - 110 : 10, warningSignPos.randomY, 100, 83)
@@ -174,21 +179,27 @@ function draw() {
   // draw food
   for (let i = 0; i < food.length; i++) {
     food[i].drawFood()
-    food[i].drop()
+    if(startGame) {
+      food[i].drop()
+    }
   }
 
   // draw fish
   for (let i = 0; i < fishes.length; i++) {
     fishes[i].drawFish()
-    fishes[i].moveFish()
-    fishes[i].chaseFood()
+    if(startGame) {
+      fishes[i].moveFish()
+      fishes[i].chaseFood()
+    }
   }
 
   // draw predator
   for (let i = 0; i < predator.length; i++) {
     predator[i].drawFish()
-    predator[i].eatFish(fishes)
-    predator[i].moveFish(i)
+    if(startGame) {
+      predator[i].eatFish(fishes)
+      predator[i].moveFish(i)
+    }
   }
 }
 
@@ -225,6 +236,7 @@ function mouseClicked() {
 
 (function(){
   // spawn shark at random x,y axis and move on 1 direction eating fish along the way
+  if(!startGame) return
   setInterval(() => {
     const randomX = Math.random() < 0.5 ? -498 : width
     const randomY = random(0, height)
@@ -262,6 +274,7 @@ const toggler = document.querySelector(".toggler")
 const togglerImg = document.querySelector(".toggler img")
 const fishUI = document.querySelector(".fish-ui")
 const fishSelects = document.querySelectorAll(".fish-ui li")
+const btns = document.querySelectorAll(".btns button")
 
 fishUI.addEventListener("click", e => e.stopPropagation())
 
@@ -280,4 +293,33 @@ fishSelects.forEach(el => {
   })
 })
 
-// add start menu
+btns.forEach(el => {
+  el.addEventListener("click", e => {
+    e.stopPropagation()
+    const actionType = e.target.attributes["data-action"].value
+    switch (actionType) {
+      case "play":
+        startGame = true
+        break
+      case "pause":
+        startGame = false
+        break
+      case "reset":
+        isReset = true
+        food = []
+        fishes = []
+        predator = []
+        break
+      default:
+        break
+    }
+  })
+
+  el.addEventListener("mousedown", e => {
+    e.stopPropagation()
+    e.target.classList.add("clicking")
+    setTimeout(() => {
+      e.target.classList.remove("clicking")
+    }, 100)
+  })
+})

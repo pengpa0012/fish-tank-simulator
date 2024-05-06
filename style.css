@@ -103,3 +103,7 @@ canvas {
   height: 50px;
   cursor: pointer;
 }
+
+.btns button img.clicking {
+  transform: translateY(5px);
+}
