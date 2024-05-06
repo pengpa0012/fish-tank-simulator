@@ -8,7 +8,7 @@ let fishImage1, fishImageFlip1,fishImage2, fishImageFlip2, fishImage3, fishImage
 let foodDetected = false
 let fishesImg
 let warningSignPos
-let startGame = true, isReset
+let startGame = true
 class Fish {
   constructor(x, y, xspeed, yspeed, fishesArr) {
     this.xspeed = xspeed
@@ -236,7 +236,6 @@ function mouseClicked() {
 
 (function(){
   // spawn shark at random x,y axis and move on 1 direction eating fish along the way
-  if(!startGame) return
   setInterval(() => {
     const randomX = Math.random() < 0.5 ? -498 : width
     const randomY = random(0, height)
@@ -305,7 +304,6 @@ btns.forEach(el => {
         startGame = false
         break
       case "reset":
-        isReset = true
         food = []
         fishes = []
         predator = []
